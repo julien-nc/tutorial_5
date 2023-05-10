@@ -1,0 +1,136 @@
+<template>
+	<NcAppNavigation>
+		<template #list>
+			<h2 v-if="loading"
+				class="icon-loading-small loading-icon" />
+			<NcEmptyContent v-else-if="sorteNotes.length === 0"
+				:title="t('tutorial_5', 'No notes yet')">
+				<template #icon>
+					<NoteIcon :size="20" />
+				</template>
+			</NcEmptyContent>
+			<NcAppNavigationItem v-for="note in sortedNotes"
+				:key="note.id"
+				:name="note.name"
+				:class="{ selectedNote: note.id === selectedNoteId }"
+				:force-display-actions="true"
+				:force-menu="false"
+				@click="$emit('click-note', note.id)">
+				<template #icon>
+					<NoteIcon />
+				</template>
+				<!--template #counter>
+				</template-->
+				<template #actions>
+					<NcActionButton v-if="adminAccess"
+						:close-after-click="true"
+						@click="$emit('delete-note', note.id)">
+						<template #icon>
+							<DeleteIcon />
+						</template>
+						{{ t('tutorial_5', 'Delete') }}
+					</NcActionButton>
+				</template>
+				<!--template #default>
+				</template-->
+			</NcAppNavigationItem>
+		</template>
+		<!--template #footer>
+			<div id="app-settings">
+				<div id="app-settings-header">
+				</div>
+			</div>
+		</template-->
+	</NcAppNavigation>
+</template>
+
+<script>
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
+
+import NoteIcon from './icons/NoteIcon.vue'
+
+import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
+import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
+import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
+import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+
+import ClickOutside from 'vue-click-outside'
+import { showSuccess } from '@nextcloud/dialogs'
+
+import { strcmp } from '../utils.js'
+
+export default {
+	name: 'MyNavigation',
+
+	components: {
+		NoteIcon,
+		AppNavigationProjectItem,
+		NcAppNavigation,
+		NcEmptyContent,
+		NcAppNavigationItem,
+		NcActionButton,
+		PlusIcon,
+	},
+
+	directives: {
+		ClickOutside,
+	},
+
+	props: {
+		notes: {
+			type: Object,
+			required: true,
+		},
+		selectedNoteId: {
+			type: Number,
+			default: 0,
+		},
+		loading: {
+			type: Boolean,
+			default: false,
+		},
+	},
+
+	data() {
+		return {
+			creating: false,
+		}
+	},
+	computed: {
+		sortedNotes() {
+			return Object.values(this.notes).sort((a, b) => {
+				return strcmp(a.name, b.name)
+			})
+		},
+	},
+	beforeMount() {
+	},
+	methods: {
+	},
+}
+</script>
+<style scoped lang="scss">
+.addNoteItem {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	border-bottom: 1px solid var(--color-border);
+	:deep(.app-navigation-entry) {
+		background-color: var(--color-main-background-blur, var(--color-main-background));
+		backdrop-filter: var(--filter-background-blur, none);
+		&:hover {
+			background-color: var(--color-background-hover);
+		}
+	}
+}
+
+:deep(.selectedNote) {
+	> .app-navigation-entry {
+		background: var(--color-primary-light, lightgrey);
+	}
+
+	> .app-navigation-entry a {
+		font-weight: bold;
+	}
+}
+</style>

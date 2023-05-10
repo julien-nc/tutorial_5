@@ -2,9 +2,9 @@
 host     = https://www.transifex.com
 lang_map = hu_HU: hu, nb_NO: nb, sk_SK: sk, th_TH: th, ja_JP: ja, bg_BG: bg, cs_CZ: cs, fi_FI: fi
 
-[o:nextcloud:p:nextcloud:r:text_templates]
-file_filter = translationfiles/<lang>/text_templates.po
-source_file = translationfiles/templates/text_templates.pot
+[o:nextcloud:p:nextcloud:r:tutorial_5]
+file_filter = translationfiles/<lang>/tutorial_5.po
+source_file = translationfiles/templates/tutorial_5.pot
 source_lang = en
 type        = PO
 

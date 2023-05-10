@@ -23,7 +23,7 @@ on:
       - tests/**
 
 env:
-  APP_NAME: text_templates
+  APP_NAME: tutorial_5
 
 jobs:
   php:

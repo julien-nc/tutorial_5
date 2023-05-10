@@ -19,7 +19,7 @@ use OCP\AppFramework\OCSController;
 use OCP\IRequest;
 use Throwable;
 
-class TemplateController extends OCSController {
+class NotesController extends OCSController {
 
 	public function __construct(
 		string             $appName,

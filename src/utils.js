@@ -9,3 +9,13 @@ export function delay(callback, ms) {
 		}, ms || 0)
 	}
 }
+
+export function strcmp(a, b) {
+	const la = a.toLowerCase()
+	const lb = b.toLowerCase()
+	return la > lb
+		? 1
+		: la < lb
+			? -1
+			: 0
+}
