@@ -1,7 +1,7 @@
 <template>
 	<NcContent app-name="tutorial_5">
 		<MyNavigation
-			:notes="notesById"
+			:notes="displayedNotesById"
 			:selected-note-id="state.selected_note_id"
 			@click-note="onClickNote"
 			@create-note="onCreateNote"
@@ -32,8 +32,10 @@ import MyMainContent from '../components/MyMainContent.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
-import { showError } from '@nextcloud/dialogs'
+import { showError, showUndo } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
+
+import { Timer } from '../utils.js'
 
 export default {
 	name: 'App',
@@ -57,15 +59,28 @@ export default {
 	},
 
 	computed: {
+		allNotes() {
+			return this.state.notes
+		},
+		notesToDisplay() {
+			return this.state.notes.filter(n => !n.trash)
+		},
+		displayedNotesById() {
+			const nbi = {}
+			this.notesToDisplay.forEach(n => {
+				nbi[n.id] = n
+			})
+			return nbi
+		},
 		notesById() {
 			const nbi = {}
-			this.state.notes.forEach(n => {
+			this.allNotes.forEach(n => {
 				nbi[n.id] = n
 			})
 			return nbi
 		},
 		selectedNote() {
-			return this.notesById[this.state.selected_note_id]
+			return this.displayedNotesById[this.state.selected_note_id]
 		},
 	},
 
@@ -107,6 +122,21 @@ export default {
 		},
 		onDeleteNote(noteId) {
 			console.debug('delete note', noteId)
+			this.$set(this.notesById[noteId], 'trash', true)
+			// cancel or delete
+			const deletionTimer = new Timer(() => {
+				this.deleteNote(noteId)
+			}, 10000)
+			showUndo(
+				t('tutorial_5', '{name} deleted', { name: this.notesById[noteId].name }),
+				() => {
+					deletionTimer.pause()
+					this.notesById[noteId].trash = false
+				},
+				{ timeout: 10000 }
+			)
+		},
+		deleteNote(noteId) {
 			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId)
 			axios.delete(url).then(response => {
 				const indexToDelete = this.state.notes.findIndex(n => n.id === noteId)
