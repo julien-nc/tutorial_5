@@ -16,6 +16,7 @@ $requirements = [
 return [
 	'routes' => [
 		['name' => 'config#setConfig', 'url' => '/config', 'verb' => 'PUT'],
+		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 	],
 
 	'ocs' => [

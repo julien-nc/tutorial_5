@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Tutorial5\Db;
 
-use OCP\AppFramework\Db\Entity;
+use DateTime;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\Exception;
@@ -65,7 +65,7 @@ class NoteMapper extends QBMapper {
 	 * @throws Exception
 	 * @throws MultipleObjectsReturnedException
 	 */
-	public function getTemplateOfUser(int $id, string $userId): Note {
+	public function getNoteOfUser(int $id, string $userId): Note {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -109,6 +109,8 @@ class NoteMapper extends QBMapper {
 		$note->setUserId($userId);
 		$note->setName($name);
 		$note->setContent($content);
+		$timestamp = (new DateTime())->getTimestamp();
+		$note->setLastModified($timestamp);
 		return $this->insert($note);
 	}
 
@@ -125,17 +127,19 @@ class NoteMapper extends QBMapper {
 			return null;
 		}
 		try {
-			$template = $this->getTemplateOfUser($id, $userId);
+			$note = $this->getNoteOfUser($id, $userId);
 		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
 			return null;
 		}
 		if ($name !== null) {
-			$template->setName($name);
+			$note->setName($name);
 		}
 		if ($content !== null) {
-			$template->setContent($content);
+			$note->setContent($content);
 		}
-		return $this->update($template);
+		$timestamp = (new DateTime())->getTimestamp();
+		$note->setLastModified($timestamp);
+		return $this->update($note);
 	}
 
 	/**
@@ -144,13 +148,13 @@ class NoteMapper extends QBMapper {
 	 * @return Note|null
 	 * @throws Exception
 	 */
-	public function deleteTemplate(int $id, string $userId): ?Note {
+	public function deleteNote(int $id, string $userId): ?Note {
 		try {
-			$template = $this->getTemplateOfUser($id, $userId);
+			$note = $this->getNoteOfUser($id, $userId);
 		} catch (DoesNotExistException | MultipleObjectsReturnedException $e) {
 			return null;
 		}
 
-		return $this->delete($template);
+		return $this->delete($note);
 	}
 }

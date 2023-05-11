@@ -18,4 +18,13 @@
     <dependencies>
         <nextcloud min-version="26" max-version="27"/>
     </dependencies>
+    <navigations>
+		<navigation>
+			<id>tutorial_5</id>
+			<name>Tutorial 5</name>
+			<route>tutorial_5.page.index</route>
+			<icon>app.svg</icon>
+			<order>8</order>
+		</navigation>
+	</navigations>
 </info>

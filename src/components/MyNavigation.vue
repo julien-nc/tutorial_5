@@ -1,9 +1,16 @@
 <template>
 	<NcAppNavigation>
 		<template #list>
+			<NcAppNavigationNewItem
+				:title="t('tutorial_5', 'Create note')"
+				@new-item="$emit('create-note', $event)">
+				<template #icon>
+					<PlusIcon />
+				</template>
+			</NcAppNavigationNewItem>
 			<h2 v-if="loading"
 				class="icon-loading-small loading-icon" />
-			<NcEmptyContent v-else-if="sorteNotes.length === 0"
+			<NcEmptyContent v-else-if="sortedNotes.length === 0"
 				:title="t('tutorial_5', 'No notes yet')">
 				<template #icon>
 					<NoteIcon :size="20" />
@@ -22,7 +29,7 @@
 				<!--template #counter>
 				</template-->
 				<template #actions>
-					<NcActionButton v-if="adminAccess"
+					<NcActionButton
 						:close-after-click="true"
 						@click="$emit('delete-note', note.id)">
 						<template #icon>
@@ -46,6 +53,7 @@
 
 <script>
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
+import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
 import NoteIcon from './icons/NoteIcon.vue'
 
@@ -53,9 +61,10 @@ import NcAppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation.js'
 import NcEmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent.js'
 import NcAppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem.js'
 import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
+import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
 
 import ClickOutside from 'vue-click-outside'
-import { showSuccess } from '@nextcloud/dialogs'
+// import { showSuccess } from '@nextcloud/dialogs'
 
 import { strcmp } from '../utils.js'
 
@@ -64,12 +73,13 @@ export default {
 
 	components: {
 		NoteIcon,
-		AppNavigationProjectItem,
 		NcAppNavigation,
 		NcEmptyContent,
 		NcAppNavigationItem,
 		NcActionButton,
+		NcAppNavigationNewItem,
 		PlusIcon,
+		DeleteIcon,
 	},
 
 	directives: {
@@ -106,6 +116,9 @@ export default {
 	beforeMount() {
 	},
 	methods: {
+		onCreate(value) {
+			console.debug('create new note')
+		},
 	},
 }
 </script>

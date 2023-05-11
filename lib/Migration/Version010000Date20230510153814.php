@@ -48,6 +48,9 @@ class Version010000Date20230510153814 extends SimpleMigrationStep {
 			$table->addColumn('content', Types::TEXT, [
 				'notnull' => true,
 			]);
+			$table->addColumn('last_modified', Types::INTEGER, [
+				'notnull' => true,
+			]);
 			$table->setPrimaryKey(['id']);
 			$table->addIndex(['user_id'], 'tutorial_5_notes_uid');
 		}

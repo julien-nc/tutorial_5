@@ -1,6 +1,10 @@
 <template>
 	<div class="main-content">
+		<h2>
+			{{ note.name }}
+		</h2>
 		<NcRichContenteditable
+			class="content-editable"
 			:value="note.content"
 			:maxlength="10000"
 			:placeholder="t('tutorial_5', 'Write a note')"
@@ -10,6 +14,8 @@
 
 <script>
 import NcRichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable.js'
+
+import { delay } from '../utils.js'
 
 export default {
 	name: 'MyMainContent',
@@ -53,5 +59,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-// nothing yet
+.main-content {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	.content-editable {
+		min-width: 600px;
+		min-height: 200px;
+	}
+}
 </style>

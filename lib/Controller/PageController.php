@@ -52,7 +52,7 @@ class PageController extends Controller {
 			'notes' => $notes,
 			'selected_note_id' => $selectedNoteId,
 		];
-		$this->initialStateService->provideInitialState('notes-initial-state', $notes);
+		$this->initialStateService->provideInitialState('notes-initial-state', $state);
 		return new TemplateResponse(Application::APP_ID, 'main');
 	}
 }

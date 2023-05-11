@@ -34,6 +34,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setName(string $name)
  * @method string getContent()
  * @method void setContent(string $content)
+ * @method int getLastModified()
+ * @method void setLastModified(int $lastModified)
  */
 class Note extends Entity implements \JsonSerializable {
 
@@ -43,11 +45,14 @@ class Note extends Entity implements \JsonSerializable {
 	protected $name;
 	/** @var string */
 	protected $content;
+	/** @var int */
+	protected $lastModified;
 
 	public function __construct() {
 		$this->addType('user_id', 'string');
 		$this->addType('name', 'string');
 		$this->addType('content', 'string');
+		$this->addType('last_modified', 'integer');
 	}
 
 	#[\ReturnTypeWillChange]
@@ -57,6 +62,7 @@ class Note extends Entity implements \JsonSerializable {
 			'user_id' => $this->userId,
 			'name' => $this->name,
 			'content' => $this->content,
+			'last_modified' => (int) $this->lastModified,
 		];
 	}
 }

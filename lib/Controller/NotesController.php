@@ -37,7 +37,7 @@ class NotesController extends OCSController {
 	 */
 	public function getUserNotes(): DataResponse {
 		try {
-			return new DataResponse($this->noteMapper->getTemplatesOfUser($this->userId));
+			return new DataResponse($this->noteMapper->getNotesOfUser($this->userId));
 		} catch (Exception | Throwable $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
@@ -50,7 +50,7 @@ class NotesController extends OCSController {
 	 * @param string $content
 	 * @return DataResponse
 	 */
-	public function addUserNote(string $name, string $content): DataResponse {
+	public function addUserNote(string $name, string $content = ''): DataResponse {
 		try {
 			$note= $this->noteMapper->createNote($this->userId, $name, $content);
 			return new DataResponse($note);
@@ -84,8 +84,8 @@ class NotesController extends OCSController {
 	 */
 	public function deleteUserNote(int $id): DataResponse {
 		try {
-			$template = $this->noteMapper->deleteNote($id, $this->userId);
-			return new DataResponse($template);
+			$note = $this->noteMapper->deleteNote($id, $this->userId);
+			return new DataResponse($note);
 		} catch (Exception | Throwable $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}
