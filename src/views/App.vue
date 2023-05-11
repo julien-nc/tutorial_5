@@ -101,6 +101,7 @@ export default {
 			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId)
 			axios.put(url, options).then(response => {
 				this.notesById[noteId].content = content
+				this.notesById[noteId].last_modified = response.data.ocs.data.last_modified
 			}).catch((error) => {
 				showError(t('tutorial_5', 'Error saving note content'))
 				console.error(error)

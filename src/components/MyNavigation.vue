@@ -26,8 +26,6 @@
 				<template #icon>
 					<NoteIcon />
 				</template>
-				<!--template #counter>
-				</template-->
 				<template #actions>
 					<NcActionButton
 						:close-after-click="true"
@@ -38,16 +36,8 @@
 						{{ t('tutorial_5', 'Delete') }}
 					</NcActionButton>
 				</template>
-				<!--template #default>
-				</template-->
 			</NcAppNavigationItem>
 		</template>
-		<!--template #footer>
-			<div id="app-settings">
-				<div id="app-settings-header">
-				</div>
-			</div>
-		</template-->
 	</NcAppNavigation>
 </template>
 
@@ -64,9 +54,8 @@ import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
 import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigationNewItem.js'
 
 import ClickOutside from 'vue-click-outside'
-// import { showSuccess } from '@nextcloud/dialogs'
 
-import { strcmp } from '../utils.js'
+// import { strcmp } from '../utils.js'
 
 export default {
 	name: 'MyNavigation',
@@ -108,8 +97,18 @@ export default {
 	},
 	computed: {
 		sortedNotes() {
+			/*
 			return Object.values(this.notes).sort((a, b) => {
 				return strcmp(a.name, b.name)
+			})
+			*/
+			return Object.values(this.notes).sort((a, b) => {
+				const { tsA, tsB } = { tsA: a.last_modified, tsB: b.last_modified }
+				return tsA > tsB
+					? -1
+					: tsA < tsB
+						? 1
+						: 0
 			})
 		},
 	},
