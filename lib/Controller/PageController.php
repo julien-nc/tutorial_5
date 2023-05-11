@@ -14,6 +14,8 @@ namespace OCA\Tutorial5\Controller;
 use OCA\Tutorial5\Db\NoteMapper;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Collaboration\Reference\RenderReferenceEvent;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
 use OCP\IRequest;
 use OCP\AppFramework\Controller;
@@ -26,6 +28,7 @@ class PageController extends Controller {
 	public function __construct(
 		string   $appName,
 		IRequest $request,
+		private IEventDispatcher $eventDispatcher,
 		private IInitialState $initialStateService,
 		private IConfig $config,
 		private NoteMapper $noteMapper,
@@ -42,6 +45,7 @@ class PageController extends Controller {
 	 * @throws PreConditionNotMetException
 	 */
 	public function index(): TemplateResponse {
+		$this->eventDispatcher->dispatchTyped(new RenderReferenceEvent());
 		try {
 			$notes = $this->noteMapper->getNotesOfUser($this->userId);
 		} catch (\Exception | \Throwable $e) {
