@@ -33,11 +33,29 @@ jobs:
       # do not stop on another job's failure
       fail-fast: false
       matrix:
-        php-versions: ['8.1']
-        databases: ['sqlite']
-        server-versions: ['master']
+        php-versions: ['8.0', '8.1']
+        databases: ['sqlite', 'mysql', 'pgsql']
+        server-versions: ['stable26', 'master']
 
     name: php${{ matrix.php-versions }}-${{ matrix.databases }}-${{ matrix.server-versions }}
+
+    services:
+      postgres:
+        image: postgres:14
+        ports:
+          - 4445:5432/tcp
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: rootpassword
+          POSTGRES_DB: nextcloud
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 2s --health-retries 5
+      mysql:
+        image: mariadb:10.5
+        ports:
+          - 4444:3306/tcp
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+        options: --health-cmd="mysqladmin ping" --health-interval 5s --health-timeout 2s --health-retries 5
 
     steps:
       - name: Checkout server
@@ -65,8 +83,13 @@ jobs:
 
       - name: Set up Nextcloud
         run: |
+          if [ "${{ matrix.databases }}" = "mysql" ]; then
+            export DB_PORT=4444
+          elif [ "${{ matrix.databases }}" = "pgsql" ]; then
+            export DB_PORT=4445
+          fi
           mkdir data
-          ./occ maintenance:install --verbose --database=sqlite --admin-user admin --admin-pass admin
+          ./occ maintenance:install --verbose --database=${{ matrix.databases }} --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass admin
           ./occ app:enable --force ${{ env.APP_NAME }}
 
       - name: PHPUnit
