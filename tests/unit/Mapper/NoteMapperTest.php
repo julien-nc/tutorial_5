@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\Tutorial5\Tests;
 
 use OCA\Tutorial5\Db\NoteMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IUserManager;
 
 /**
@@ -66,6 +67,45 @@ class NoteMapperTest extends \Test\TestCase {
 			self::assertEquals($note['name'], $addedNote->getName());
 			self::assertEquals($note['content'], $addedNote->getContent());
 			self::assertEquals($note['user_id'], $addedNote->getUserId());
+		}
+	}
+
+	public function testDeleteNote() {
+		$notes = [
+			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
+		];
+		foreach ($notes as $note) {
+			$addedNote = $this->noteMapper->createNote($note['user_id'], $note['name'], $note['content']);
+			$addedNoteId = $addedNote->getId();
+			$dbNote = $this->noteMapper->getNoteOfUser($addedNoteId, $note['user_id']);
+			$deletedNote = $this->noteMapper->deleteNote($addedNoteId, $note['user_id']);
+			$this->assertNotNull($deletedNote, 'error deleting note');
+			$exceptionThrowed = false;
+			try {
+				$dbNote = $this->noteMapper->getNoteOfUser($addedNoteId, $note['user_id']);
+			} catch (DoesNotExistException $e) {
+				$exceptionThrowed = true;
+			}
+			$this->assertTrue($exceptionThrowed, 'deleted note still exists');
+		}
+	}
+
+	public function testEditNote() {
+		$notes = [
+			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
+		];
+		foreach ($notes as $note) {
+			$addedNote = $this->noteMapper->createNote($note['user_id'], $note['name'], $note['content']);
+			$addedNoteId = $addedNote->getId();
+
+			$editedNote = $this->noteMapper->updateNote($addedNoteId, $note['user_id'], $note['name'] . 'AAA', $note['content'] . 'BBB');
+			$this->assertNotNull($editedNote, 'error deleting note');
+			self::assertEquals($note['name'] . 'AAA', $editedNote->getName());
+			self::assertEquals($note['content'] . 'BBB', $editedNote->getContent());
+
+			$dbNote = $this->noteMapper->getNoteOfUser($addedNoteId, $note['user_id']);
+			self::assertEquals($note['name'] . 'AAA', $dbNote->getName());
+			self::assertEquals($note['content'] . 'BBB', $dbNote->getContent());
 		}
 	}
 }
