@@ -4,6 +4,7 @@
 			:notes="displayedNotesById"
 			:selected-note-id="state.selected_note_id"
 			@click-note="onClickNote"
+			@export-note="onExportNote"
 			@create-note="onCreateNote"
 			@delete-note="onDeleteNote" />
 		<NcAppContent>
@@ -32,7 +33,7 @@ import MyMainContent from '../components/MyMainContent.vue'
 
 import axios from '@nextcloud/axios'
 import { generateOcsUrl, generateUrl } from '@nextcloud/router'
-import { showError, showUndo } from '@nextcloud/dialogs'
+import { showSuccess, showError, showUndo } from '@nextcloud/dialogs'
 import { loadState } from '@nextcloud/initial-state'
 
 import { Timer } from '../utils.js'
@@ -161,6 +162,15 @@ export default {
 			axios.put(url, options).then(response => {
 			}).catch((error) => {
 				showError(t('tutorial_5', 'Error saving selected note'))
+				console.error(error)
+			})
+		},
+		onExportNote(noteId) {
+			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId + '/export')
+			axios.get(url).then(response => {
+				showSuccess(t('tutorial_5', 'Note exported in {path}', { path: response.data.ocs.data }))
+			}).catch((error) => {
+				showError(t('tutorial_5', 'Error deleting note'))
 				console.error(error)
 			})
 		},

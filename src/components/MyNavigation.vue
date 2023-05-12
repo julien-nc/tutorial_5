@@ -29,6 +29,14 @@
 				<template #actions>
 					<NcActionButton
 						:close-after-click="true"
+						@click="$emit('export-note', note.id)">
+						<template #icon>
+							<FileExportIcon />
+						</template>
+						{{ t('tutorial_5', 'Export to file') }}
+					</NcActionButton>
+					<NcActionButton
+						:close-after-click="true"
 						@click="$emit('delete-note', note.id)">
 						<template #icon>
 							<DeleteIcon />
@@ -42,6 +50,7 @@
 </template>
 
 <script>
+import FileExportIcon from 'vue-material-design-icons/FileExport.vue'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import DeleteIcon from 'vue-material-design-icons/Delete.vue'
 
@@ -55,8 +64,6 @@ import NcAppNavigationNewItem from '@nextcloud/vue/dist/Components/NcAppNavigati
 
 import ClickOutside from 'vue-click-outside'
 
-// import { strcmp } from '../utils.js'
-
 export default {
 	name: 'MyNavigation',
 
@@ -69,6 +76,7 @@ export default {
 		NcAppNavigationNewItem,
 		PlusIcon,
 		DeleteIcon,
+		FileExportIcon,
 	},
 
 	directives: {
@@ -97,11 +105,6 @@ export default {
 	},
 	computed: {
 		sortedNotes() {
-			/*
-			return Object.values(this.notes).sort((a, b) => {
-				return strcmp(a.name, b.name)
-			})
-			*/
 			return Object.values(this.notes).sort((a, b) => {
 				const { tsA, tsB } = { tsA: a.last_modified, tsB: b.last_modified }
 				return tsA > tsB

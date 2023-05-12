@@ -13,6 +13,7 @@ namespace OCA\Tutorial5\Controller;
 
 use Exception;
 use OCA\Tutorial5\Db\NoteMapper;
+use OCA\Tutorial5\Service\NoteService;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\OCSController;
@@ -25,6 +26,7 @@ class NotesController extends OCSController {
 		string             $appName,
 		IRequest           $request,
 		private NoteMapper $noteMapper,
+		private NoteService $noteService,
 		private ?string    $userId
 	) {
 		parent::__construct($appName, $request);
@@ -86,6 +88,19 @@ class NotesController extends OCSController {
 		try {
 			$note = $this->noteMapper->deleteNote($id, $this->userId);
 			return new DataResponse($note);
+		} catch (Exception | Throwable $e) {
+			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * @param int $id
+	 * @return DataResponse
+	 */
+	public function exportUserNote(int $id): DataResponse {
+		try {
+			$path = $this->noteService->exportNote($id, $this->userId);
+			return new DataResponse($path);
 		} catch (Exception | Throwable $e) {
 			return new DataResponse(['error' => $e->getMessage()], Http::STATUS_BAD_REQUEST);
 		}

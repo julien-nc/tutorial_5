@@ -16,6 +16,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 class Application extends App implements IBootstrap {
 
 	public const APP_ID = 'tutorial_5';
+	public const NOTE_FOLDER_NAME = 'TutorialNotes';
 
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
