@@ -23,10 +23,15 @@
 
 declare(strict_types=1);
 
+namespace OCA\Tutorial5\Tests;
+
 use OCA\Tutorial5\Db\NoteMapper;
 use OCP\IUserManager;
 
-class Test extends \Test\TestCase {
+/**
+ * @group DB
+ */
+class NoteMapperTest extends \Test\TestCase {
 
 	private NoteMapper $noteMapper;
 
