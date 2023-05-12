@@ -35,7 +35,12 @@ use OCP\IUserManager;
 class NoteMapperTest extends \Test\TestCase {
 
 	private NoteMapper $noteMapper;
-	private array $testNoteValues;
+	private array $testNoteValues = [
+		['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
+		['user_id' => 'user1', 'name' => '', 'content' => 'supercontent'],
+		['user_id' => 'user1', 'name' => 'supername', 'content' => ''],
+		['user_id' => 'user1', 'name' => '', 'content' => ''],
+	];
 
 	public function setUp(): void {
 		parent::setUp();
@@ -43,12 +48,6 @@ class NoteMapperTest extends \Test\TestCase {
 		\OC::$server->getAppManager()->enableApp('tutorial_5');
 
 		$this->noteMapper = \OC::$server->get(NoteMapper::class);
-		$this->testNotesValues = [
-			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
-			['user_id' => 'user1', 'name' => '', 'content' => 'supercontent'],
-			['user_id' => 'user1', 'name' => 'supername', 'content' => ''],
-			['user_id' => 'user1', 'name' => '', 'content' => ''],
-		];
 	}
 
 	public function tearDown(): void {
