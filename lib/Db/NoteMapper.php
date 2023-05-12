@@ -157,4 +157,20 @@ class NoteMapper extends QBMapper {
 
 		return $this->delete($note);
 	}
+
+	/**
+	 * @param string $userId
+	 * @return void
+	 * @throws Exception
+	 */
+	public function deleteNotesOfUser(string $userId): void {
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->delete($this->getTableName())
+			->where(
+				$qb->expr()->eq('user_id', $qb->createNamedParameter($userId, IQueryBuilder::PARAM_STR))
+			);
+		$qb->executeStatement();
+		$qb->resetQueryParts();
+	}
 }

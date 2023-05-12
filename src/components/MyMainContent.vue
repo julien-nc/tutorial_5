@@ -7,6 +7,7 @@
 			class="content-editable"
 			:value="note.content"
 			:maxlength="10000"
+			:multiline="true"
 			:placeholder="t('tutorial_5', 'Write a note')"
 			@update:value="onUpdateValue" />
 	</div>
