@@ -35,6 +35,7 @@ use OCP\IUserManager;
 class NoteMapperTest extends \Test\TestCase {
 
 	private NoteMapper $noteMapper;
+	private array $testNoteValues;
 
 	public function setUp(): void {
 		parent::setUp();
@@ -42,6 +43,12 @@ class NoteMapperTest extends \Test\TestCase {
 		\OC::$server->getAppManager()->enableApp('tutorial_5');
 
 		$this->noteMapper = \OC::$server->get(NoteMapper::class);
+		$this->testNotesValues = [
+			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
+			['user_id' => 'user1', 'name' => '', 'content' => 'supercontent'],
+			['user_id' => 'user1', 'name' => 'supername', 'content' => ''],
+			['user_id' => 'user1', 'name' => '', 'content' => ''],
+		];
 	}
 
 	public function tearDown(): void {
@@ -59,10 +66,7 @@ class NoteMapperTest extends \Test\TestCase {
 	}
 
 	public function testAddNote() {
-		$notes = [
-			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
-		];
-		foreach ($notes as $note) {
+		foreach ($this->testNoteValues as $note) {
 			$addedNote = $this->noteMapper->createNote('user1', $note['name'], $note['content']);
 			self::assertEquals($note['name'], $addedNote->getName());
 			self::assertEquals($note['content'], $addedNote->getContent());
@@ -71,10 +75,7 @@ class NoteMapperTest extends \Test\TestCase {
 	}
 
 	public function testDeleteNote() {
-		$notes = [
-			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
-		];
-		foreach ($notes as $note) {
+		foreach ($this->testNoteValues as $note) {
 			$addedNote = $this->noteMapper->createNote($note['user_id'], $note['name'], $note['content']);
 			$addedNoteId = $addedNote->getId();
 			$dbNote = $this->noteMapper->getNoteOfUser($addedNoteId, $note['user_id']);
@@ -91,10 +92,7 @@ class NoteMapperTest extends \Test\TestCase {
 	}
 
 	public function testEditNote() {
-		$notes = [
-			['user_id' => 'user1', 'name' => 'supername', 'content' => 'supercontent'],
-		];
-		foreach ($notes as $note) {
+		foreach ($this->testNoteValues as $note) {
 			$addedNote = $this->noteMapper->createNote($note['user_id'], $note['name'], $note['content']);
 			$addedNoteId = $addedNote->getId();
 
