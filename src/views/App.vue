@@ -99,7 +99,7 @@ export default {
 			const options = {
 				content,
 			}
-			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId)
+			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/{noteId}', { noteId })
 			axios.put(url, options).then(response => {
 				this.notesById[noteId].content = content
 				this.notesById[noteId].last_modified = response.data.ocs.data.last_modified
@@ -139,7 +139,7 @@ export default {
 			)
 		},
 		deleteNote(noteId) {
-			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId)
+			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/{noteId}', { noteId })
 			axios.delete(url).then(response => {
 				const indexToDelete = this.state.notes.findIndex(n => n.id === noteId)
 				if (indexToDelete !== -1) {
@@ -166,7 +166,7 @@ export default {
 			})
 		},
 		onExportNote(noteId) {
-			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/' + noteId + '/export')
+			const url = generateOcsUrl('apps/tutorial_5/api/v1/notes/{noteId}/export', { noteId })
 			axios.get(url).then(response => {
 				showSuccess(t('tutorial_5', 'Note exported in {path}', { path: response.data.ocs.data }))
 			}).catch((error) => {
