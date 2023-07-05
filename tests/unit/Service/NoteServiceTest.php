@@ -4,7 +4,7 @@ namespace OCA\Tutorial5\Tests;
 
 use OCA\Tutorial5\AppInfo\Application;
 
-class NoteServiceTest extends \PHPUnit\Framework\TestCase {
+class NoteServiceTest extends \Test\TestCase {
 
 	public function testDummy() {
 		$app = new Application();
