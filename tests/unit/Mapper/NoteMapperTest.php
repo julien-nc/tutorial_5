@@ -32,7 +32,7 @@ use OCP\IUserManager;
 /**
  * @group DB
  */
-class NoteMapperTest extends \Test\TestCase {
+class NoteMapperTest extends \PHPUnit\Framework\TestCase {
 
 	private NoteMapper $noteMapper;
 	private array $testNoteValues = [
